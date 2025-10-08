@@ -1,5 +1,6 @@
 package cleancode.minesweeper.tobe;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ public class MinesweeperGame {
 
     public static final int BOARD_ROW_SIZE = 8;
     public static final int BOARD_COL_SIZE = 10;
+    public static final Scanner SCANNER = new Scanner(System.in);
     private static String[][] BOARD = new String[BOARD_ROW_SIZE][BOARD_COL_SIZE];
     private static Integer[][] NEARBY_LAND_MINE_COUNTS = new Integer[BOARD_ROW_SIZE][BOARD_COL_SIZE];
     private static boolean[][] LAND_MINES = new boolean[BOARD_ROW_SIZE][BOARD_COL_SIZE];
@@ -21,7 +23,6 @@ public class MinesweeperGame {
 
     public static void main(String[] args) {
         showGameStartComments();
-        Scanner scanner = new Scanner(System.in);
         initializeGame();
         while (true) {
             showBoard();
@@ -33,8 +34,9 @@ public class MinesweeperGame {
                 System.out.println("지뢰를 밟았습니다. GAME OVER!");
                 break;
             }
-            String cellInput = getCellInputFromUser(scanner);
-            String userActionInput = getUserActionInputFromUser(scanner);
+            // note: scanner가 true문 밖에서 선언되었는데 사용은 이쪽까지 와서 사용되어 사용되는곳으로 옮겼다. 그러니 while안에서 반복 생성되어 상수로 올렸다.
+            String cellInput = getCellInputFromUser();
+            String userActionInput = getUserActionInputFromUser();
             actOnCell(cellInput, userActionInput);
         }
     }
@@ -86,14 +88,14 @@ public class MinesweeperGame {
         return convertColFrom(cellInputCol);
     }
 
-    private static String getUserActionInputFromUser(Scanner scanner) {
+    private static String getUserActionInputFromUser() {
         System.out.println("선택한 셀에 대한 행위를 선택하세요. (1: 오픈, 2: 깃발 꽂기)");
-        return scanner.nextLine();
+        return SCANNER.nextLine();
     }
 
-    private static String getCellInputFromUser(Scanner scanner) {
+    private static String getCellInputFromUser() {
         System.out.println("선택할 좌표를 입력하세요. (예: a1)");
-        return scanner.nextLine();
+        return SCANNER.nextLine();
     }
 
     private static boolean doesUserLoseTheGame() {
@@ -115,16 +117,23 @@ public class MinesweeperGame {
         gameStatus = 1;
     }
 
+    // note: 리펙토링할 메서드가 있으면 직접 바꾸지 말고 복사하고 리펙토링 한다음에 사용되는곳에 하나 하나 적용해서 테스트해보며 반영하는것이 좋다.
+//    private static boolean isAllCellOpened() {
+//        boolean isAllOpened = true;
+//        for (int i = 0; i < BOARD_ROW_SIZE; i++) {
+//            for (int j = 0; j < BOARD_COL_SIZE; j++) {
+//                if (BOARD[i][j].equals(CLOSED_CELL_SIGN)) {
+//                    isAllOpened = false;
+//                }
+//            }
+//        }
+//        return isAllOpened;
+//    }
+
     private static boolean isAllCellOpened() {
-        boolean isAllOpened = true;
-        for (int i = 0; i < BOARD_ROW_SIZE; i++) {
-            for (int j = 0; j < BOARD_COL_SIZE; j++) {
-                if (BOARD[i][j].equals(CLOSED_CELL_SIGN)) {
-                    isAllOpened = false;
-                }
-            }
-        }
-        return isAllOpened;
+        return Arrays.stream(BOARD)
+            .flatMap(Arrays::stream)
+            .noneMatch(cell -> cell.equals(CLOSED_CELL_SIGN));
     }
 
     private static int convertRowFrom(char cellInputRow) { // note: 추상화 레벨을 통일하기 위해서 한줄이여도 메서드로 만들었다.
