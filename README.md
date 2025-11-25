@@ -117,7 +117,9 @@
    - 객체가 가진 공개 메서드, 필드, 상수 등은 해당 객체의 단일 책임에 의해서만 변경 되는가?
    - 관심사의 분리
    - 높은 응집도, 낮은 결합도
-2. OCP: Open-Closed Principle
+2. OCP: Open-Closed Principle(개방-폐쇄 원칙: 확장에는 열려있고 수정에는 닫혀있어야한다.)
+   - 새로운 요구 사항이 있을때 코드가 과도하게 변경되면 OCP를 지키지 못하고 있을 확률이 높다. 
+   - 추상화와 다형성을 활용해서 OCP를 지킬 수 있다.
 3. LSP: Liskov Substitution Principle
 4. ISP: Interface Segregation Principle
 5. DIP: Dependency Inversion Principle
