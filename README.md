@@ -110,3 +110,14 @@
 3. setter 사용 자제, 데이터는 불변이 최고이다. setter보다는 update와 같이 의도를 드러내는 네이밍을 고려하자
 4. getter도 처음에는 사용 자제하고 객체에 물어보기
 5. 필드의 수는 적으면 적을수록 좋다
+
+### SOLID
+1. SRP: Single Responsibility Principle(단일 책임 원칙: 하나의 클래스는 단 한 가지의 변경 이유만을 가져야한다.)
+   - "변경 이유" = 책임
+   - 객체가 가진 공개 메서드, 필드, 상수 등은 해당 객체의 단일 책임에 의해서만 변경 되는가?
+   - 관심사의 분리
+   - 높은 응집도, 낮은 결합도
+2. OCP: Open-Closed Principle
+3. LSP: Liskov Substitution Principle
+4. ISP: Interface Segregation Principle
+5. DIP: Dependency Inversion Principle
