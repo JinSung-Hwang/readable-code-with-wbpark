@@ -1,11 +1,13 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.game.GameInitializable;
+import cleancode.minesweeper.tobe.game.GameRunnable;
 import cleancode.minesweeper.tobe.gameLevel.GameLevel;
 import cleancode.minesweeper.tobe.io.ConsoleInputHandler;
 import cleancode.minesweeper.tobe.io.ConsoleOutputHandler;
 
 // note: tip1: 메서드 추출해서 리펙토링하다보면 공통 로직도 같이 리펙토링 하는 경우가 있다. IDE에서 공통 로직이라고 해도 내가 눈으로 꼭 확인해봐야한다. 같은 코드여도 맥락이 다를 수 있다.
-public class Minesweeper {
+public class Minesweeper implements GameInitializable, GameRunnable {
 
   private final GameBoard gameBoard;
   private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
@@ -17,9 +19,14 @@ public class Minesweeper {
     gameBoard = new GameBoard(gameLevel);
   }
 
+  @Override
+  public void initialize() {
+    gameBoard.initializeGame();
+  }
+
+  @Override
   public void run() {
     consoleOutputHandler.showGameStartComments();
-    gameBoard.initializeGame();
 
     while (true) {
       try {
