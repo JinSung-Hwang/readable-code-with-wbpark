@@ -120,6 +120,9 @@
 2. OCP: Open-Closed Principle(개방-폐쇄 원칙: 확장에는 열려있고 수정에는 닫혀있어야한다.)
    - 새로운 요구 사항이 있을때 코드가 과도하게 변경되면 OCP를 지키지 못하고 있을 확률이 높다. 
    - 추상화와 다형성을 활용해서 OCP를 지킬 수 있다.
-3. LSP: Liskov Substitution Principle
+3. LSP: Liskov Substitution Principle(리스코프 치환 원칙: 상속 구조에서 부모 클래스의 인터스턴스를 자식 클래스의 인스턴스로 치환할 수 있어야한다.)
+   - 자식 클래스는 부모 클래스의 책임을 준수하며, 부모 클래스의 행동을 변경하지 않아야한다.
+   - LSP를 위반하면, 상속 클래스를 사용할때 오동작, 예상 밖의 예외가 발생 등을 방지하기 위한 불필요한 타입 체크 로직(instanceof)이 추가로 동반될 수 있다.
+   - 상속 구조에서는 instanceof등으로 타입을 체크해서 예외적으로 처리하지 않아야 정상적이다.
 4. ISP: Interface Segregation Principle
 5. DIP: Dependency Inversion Principle

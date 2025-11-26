@@ -1,5 +1,9 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.cell.Cell;
+import cleancode.minesweeper.tobe.cell.EmptyCell;
+import cleancode.minesweeper.tobe.cell.LandMineCell;
+import cleancode.minesweeper.tobe.cell.NumberCell;
 import cleancode.minesweeper.tobe.gameLevel.GameLevel;
 import java.util.Arrays;
 import java.util.Random;
@@ -87,19 +91,19 @@ public class GameBoard {
   }
 
   public void initializeGame() {
-    int rowSize = board.length;
-    int colSize = board[0].length;
+    int rowSize = getRowSize();
+    int colSize = getColSize();
 
     for (int row = 0; row < rowSize; row++) {
       for (int col = 0; col < colSize; col++) {
-        board[row][col] = Cell.create();
+        board[row][col] = new EmptyCell();
       }
     }
 
     for (int i = 0; i < landMindCount; i++) {
       int landMineCol = new Random().nextInt(colSize);
       int landMineRow = new Random().nextInt(rowSize);
-      findCell(landMineRow, landMineCol).turnOnLandMine();
+      board[landMineRow][landMineCol] = new LandMineCell();
     }
 
     for (int row = 0; row < rowSize; row++) {
@@ -108,11 +112,21 @@ public class GameBoard {
           continue;
         }
         int count = countNearbyLandMines(row, col);
-        Cell cell = findCell(row, col);
-        cell.updateNearbyLandMineCount(count);
+        if (count == 0) {
+          continue;
+        }
+        board[row][col] = new NumberCell(count);
       }
     }
   }
+
+// note: 아래와 같이 "상속 구조에서는 instanceof등으로 타입을 체크해서 예외적으로 처리하지 않아야 정상적이다."
+// note: 아래와 같은 코드가 발생하면 LSP 원칙을 위반한것이므로 이런 타입체크 로직이 필요하지 않도록 객체 설계나 구조를 변경하는것이 필요하다.
+//  public void temp(Cell cell) {
+//    if (cell instanceof NumberCell) {
+//      cell.updateNearbyLandMineCount(0);
+//    }
+//  }
 
   public String getSign(int rowIndex, int colIndex) {
     Cell cell = findCell(rowIndex, colIndex);
