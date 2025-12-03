@@ -3,20 +3,22 @@ package cleancode.minesweeper.tobe;
 import cleancode.minesweeper.tobe.game.GameInitializable;
 import cleancode.minesweeper.tobe.game.GameRunnable;
 import cleancode.minesweeper.tobe.gameLevel.GameLevel;
-import cleancode.minesweeper.tobe.io.ConsoleInputHandler;
-import cleancode.minesweeper.tobe.io.ConsoleOutputHandler;
+import cleancode.minesweeper.tobe.io.InputHandler;
+import cleancode.minesweeper.tobe.io.OutputHandler;
 
 // note: tip1: 메서드 추출해서 리펙토링하다보면 공통 로직도 같이 리펙토링 하는 경우가 있다. IDE에서 공통 로직이라고 해도 내가 눈으로 꼭 확인해봐야한다. 같은 코드여도 맥락이 다를 수 있다.
 public class Minesweeper implements GameInitializable, GameRunnable {
 
   private final GameBoard gameBoard;
   private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
-  private final ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
-  private final ConsoleOutputHandler consoleOutputHandler = new ConsoleOutputHandler();
+  private final InputHandler inputHandler;
+  private final OutputHandler outputHandler;
   private int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
 
-  public Minesweeper(GameLevel gameLevel) {
+  public Minesweeper(GameLevel gameLevel, InputHandler inputHandler, OutputHandler outputHandler) {
     gameBoard = new GameBoard(gameLevel);
+    this.inputHandler = inputHandler;
+    this.outputHandler = outputHandler;
   }
 
   @Override
@@ -26,18 +28,18 @@ public class Minesweeper implements GameInitializable, GameRunnable {
 
   @Override
   public void run() {
-    consoleOutputHandler.showGameStartComments();
+    outputHandler.showGameStartComments();
 
     while (true) {
       try {
-        consoleOutputHandler.showBoard(gameBoard);
+        outputHandler.showBoard(gameBoard);
 
         if (doesUserWinTheGame()) { // note: if문의 간단한 로직이지만 추상화 레벨을 맞추기위해서 메서드로 추상화했다.
-          consoleOutputHandler.printGameWinningComment();
+          outputHandler.showGameWinningComment();
           break;
         }
         if (doesUserLoseTheGame()) {
-          consoleOutputHandler.printGameLosingComment();
+          outputHandler.showGameLosingComment();
           break;
         }
 
@@ -46,10 +48,10 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         String userActionInput = getUserActionInputFromUser();
         actOnCell(cellInput, userActionInput);
       } catch (GameException e) {
-        consoleOutputHandler.printExceptionMessage(e);
+        outputHandler.showExceptionMessage(e);
 //        consoleOutputHandler.printExceptionMessage(e.getMessage()); // note: printExceptionMessage(e)와 printExceptionMessage(e.getMessage())중 어떤 메세지 시그니처가 좋은가? e를 넣어주는것이 좀더 범용성이 높다?
       } catch (Exception e) {
-        consoleOutputHandler.printSimpleMessage("프로그램에 문제가 생겼습니다.");
+        outputHandler.showSimpleMessage("프로그램에 문제가 생겼습니다.");
       }
     }
   }
@@ -92,13 +94,13 @@ public class Minesweeper implements GameInitializable, GameRunnable {
   }
 
   private String getUserActionInputFromUser() {
-    consoleOutputHandler.printCommentForUserAction();
-    return consoleInputHandler.getUserInput();
+    outputHandler.showCommentForUserAction();
+    return inputHandler.getUserInput();
   }
 
   private String getCellInputFromUser() {
-    consoleOutputHandler.printCommentForSelectingCell();
-    return consoleInputHandler.getUserInput();
+    outputHandler.showCommentForSelectingCell();
+    return inputHandler.getUserInput();
   }
 
   private boolean doesUserLoseTheGame() {
