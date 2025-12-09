@@ -184,3 +184,32 @@
   - 상태와 행위를 한곳에서 관리할 수 있는 추상화된 객체
 - 특정 도메인 개념에 대해 그 종류와 기능을 명시적으로 표현해 줄 수 있다.
 - 만약 변경이 정말 잦은 개념은, Enum보다 DB로 관리하는것이 나을 수 있다. ex) 1주일에 한번씩 변경해야한다면
+
+#### 다형성 활용하기
+
+아래 코드의 if문이 많은것을 interface와 class를 이용해서 다형성 이용하거나 enum을 활용해서 로직을 수정했다.
+```java
+  private String decideCellSignFrom(CellSnapshot snapshot) {
+    CellSnapshotStatus status = snapshot.getStatus();
+    if (status == CellSnapshotStatus.EMPTY) {
+      return EMPTY_SIGN;
+    }
+    if (status == CellSnapshotStatus.FLAG) {
+      return FLAG_SIGN;
+    }
+    if (status == CellSnapshotStatus.LAND_MINE) {
+      return LAND_MINE_SIGN;
+    }
+    if (status == CellSnapshotStatus.NUMBER) {
+      return String.valueOf(snapshot.getNearbyLandMineCount());
+    }
+    if (status == CellSnapshotStatus.UNCHECKED) {
+      return UNCHECKED_SIGN;
+    }
+    throw new IllegalArgumentException("확인할 수 없는 셀입니다.");
+  }
+```
+이 코드를 분석하면 어떤 `조건(if문)`을 만족하면 그 조건에 해당하는 `행위(method)`를 수행하는 로직이다. </br>
+
+이 코드를 OCP관점으로 보면 변화하는것은 `조건, 행위` 이고 변하지 않는것은 `조건을 만족하는가? 행위를 수행한다` 로 분리할 수 있다. </br>
+그래서 변화하는것과 변하지 않는 것을 분리하여 추상화하고, OCP를 지키는 구조로 변환했다.

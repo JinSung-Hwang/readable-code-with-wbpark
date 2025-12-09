@@ -79,8 +79,8 @@ public class GameBoard {
 //            }
 //        }
 //        return isAllOpened;
+//    }
 
-  //    }
   public boolean isAllCellChecked() {
     Cells cells = Cells.from(board);
     return cells.isAllChecked();
