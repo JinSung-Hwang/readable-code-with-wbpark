@@ -2,6 +2,7 @@ package cleancode.minesweeper.tobe;
 
 import cleancode.minesweeper.tobe.minesweeper.Minesweeper;
 import cleancode.minesweeper.tobe.minesweeper.config.GameConfig;
+import cleancode.minesweeper.tobe.minesweeper.gameLevel.Advanced;
 import cleancode.minesweeper.tobe.minesweeper.gameLevel.Beginner;
 import cleancode.minesweeper.tobe.minesweeper.gameLevel.Middle;
 import cleancode.minesweeper.tobe.minesweeper.io.ConsoleInputHandler;
@@ -12,7 +13,7 @@ public class GameApplication {
     // note: 이전에는 GameLevel, InputHandler, OutputHandler를 각각 넣어줬는데 게임이 발전함에 따라 config 종류가 계속 생성될거 같다고 판단되어 새롭게 도메인 개념 도출하여 만들었다.
     // note: 이렇게 미래의 상황을 예측하여 도메인 객체를 새로 만들었는데 매번 과하게 하면 오버엔지니어링이 될 수 있기에 조심해야한다.
     GameConfig gameConfig = new GameConfig(
-        new Beginner(),
+        new Advanced(),
         new ConsoleInputHandler(),
         new ConsoleOutputHandler()
     );
